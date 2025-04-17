@@ -4,6 +4,7 @@ import { RefObject, Suspense } from "react";
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { Planet } from "./spaceship/planet";
 import { MainRoom } from "./spaceship/main-room";
+import { CenterDot } from "./center-dot";
 
 interface SceneProps {
   cameraRef: RefObject<OrbitControlsImpl | null>
@@ -18,8 +19,8 @@ export function Scene({ cameraRef, currentDay, totalDays }: SceneProps) {
         <color attach="background" args={['#02020f']} />
         <ambientLight intensity={0.4} />
         <pointLight position={[0, 0, 10]} intensity={40} distance={50} color="red" />
-        <OrbitControls ref={cameraRef} />
-        {/* <CenterDot /> */}
+        <OrbitControls ref={cameraRef} enableRotate={false} />
+        <CenterDot />
         <Stars radius={100} depth={50} count={5000} factor={4} saturation={1} fade speed={1} />
         <MainRoom />
         <Suspense fallback={null}>

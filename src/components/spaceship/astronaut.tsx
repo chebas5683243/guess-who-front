@@ -3,22 +3,27 @@ import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three/examples/jsm/Addons.js'
 import { useGraph } from '@react-three/fiber'
 import * as THREE from "three"
+import { ROOM_HEIGHT, ROOM_WIDTH } from './main-room'
 
-interface ModelProps {
-  position: [number, number, number]
+interface PlayerProps {
+  id: string,
+  order: number,
 }
 
 const gltfPath = "/models/little_astronaut/scene.gltf"
 
-function AstronautComponent(props: ModelProps) {
+function PlayerModelComponent({ id, order }: PlayerProps) {
   const group = useRef(null)
   const { scene, materials, animations } = useGLTF(gltfPath)
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes } = useGraph(clone)
   const { mixer } = useAnimations(clone.animations, group)
 
+  const position: [number, number, number] = useMemo(() => {
+    return [-2.75 + 0.5 * order, -ROOM_HEIGHT / 2, -ROOM_WIDTH / 4]
+  }, [order])
+
   useEffect(() => {
-    console.log("effect")
     if (animations.length === 0) return;
     const fullClip = animations[0]
     // const falling = THREE.AnimationUtils.subclip(fullClip, 'Falling', 0, 30)
@@ -35,8 +40,13 @@ function AstronautComponent(props: ModelProps) {
     return () => { standingAction.reset() }
   }, [animations, mixer])
 
+  function handleClick(e: Event) {
+    alert(id)
+    e.stopPropagation()
+  }
+
   return (
-    <group ref={group} {...props} dispose={null} scale={0.5}>
+    <group ref={group} position={position} dispose={null} scale={0.5} onClick={handleClick}>
       <group name="Sketchfab_Scene">
         <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]} scale={0.011}>
           <group name="17f9d1b3a83741e2a2981db7241c686efbx" rotation={[Math.PI / 2, 0, 0]}>
@@ -76,6 +86,6 @@ function AstronautComponent(props: ModelProps) {
   )
 }
 
-export const Astronaut = memo(AstronautComponent)
+export const PlayerModel = memo(PlayerModelComponent)
 
 useGLTF.preload(gltfPath)
