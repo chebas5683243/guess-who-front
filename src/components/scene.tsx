@@ -16,10 +16,10 @@ export function Scene({ cameraRef, currentDay, totalDays }: SceneProps) {
   return (
     <div className="w-screen h-screen">
       <Canvas camera={{ position: [0, 0, 1], fov: 75 }}>
-        <color attach="background" args={['#02020f']} />
+        <color attach="background" args={['#040404']} />
         <ambientLight intensity={0.4} />
         <pointLight position={[0, 0, 10]} intensity={40} distance={50} color="red" />
-        <OrbitControls ref={cameraRef} enableRotate={false} />
+        <OrbitControls ref={cameraRef} enableRotate={false} enableZoom={false} />
         <CenterDot />
         <Stars radius={100} depth={50} count={5000} factor={4} saturation={1} fade speed={1} />
         <MainRoom />

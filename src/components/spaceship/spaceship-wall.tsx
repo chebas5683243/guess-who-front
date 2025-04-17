@@ -9,7 +9,14 @@ export const SpaceshipWall = ({ position, rotation, size, color }: {
   color: string
 }) => {
   return (
-    <Plane position={position} rotation={rotation} args={size} onClick={(e) => { e.stopPropagation() }}>
+    <Plane
+      position={position}
+      rotation={rotation}
+      args={size}
+      onClick={(e) => { e.stopPropagation() }}
+      onPointerOver={(e) => { e.stopPropagation() }}
+      onPointerOut={(e) => { e.stopPropagation() }}
+    >
       <meshStandardMaterial
         color={color ?? Color.NAMES.aliceblue}
         side={THREE.DoubleSide}

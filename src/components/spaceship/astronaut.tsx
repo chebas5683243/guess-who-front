@@ -1,30 +1,38 @@
-import React, { memo, useEffect, useMemo, useRef } from 'react'
-import { useGLTF, useAnimations } from '@react-three/drei'
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { useGLTF, useAnimations, Html } from '@react-three/drei'
 import { SkeletonUtils } from 'three/examples/jsm/Addons.js'
 import { useGraph } from '@react-three/fiber'
 import * as THREE from "three"
 import { ROOM_HEIGHT, ROOM_WIDTH } from './main-room'
+import { TallGlow } from '../effects/glow'
 
 interface PlayerProps {
   id: string,
   order: number,
+  isDead: boolean,
+  name: string,
 }
 
 const gltfPath = "/models/little_astronaut/scene.gltf"
 
-function PlayerModelComponent({ id, order }: PlayerProps) {
+function PlayerModelComponent({ id, order, isDead, name }: PlayerProps) {
   const group = useRef(null)
   const { scene, materials, animations } = useGLTF(gltfPath)
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes } = useGraph(clone)
   const { mixer } = useAnimations(clone.animations, group)
+  const [isHovered, setIsHovered] = useState(false)
 
-  const position: [number, number, number] = useMemo(() => {
-    return [-2.75 + 0.5 * order, -ROOM_HEIGHT / 2, -ROOM_WIDTH / 4]
-  }, [order])
+  const position: [number, number, number] = useMemo(() => (
+    [-2.75 + 0.5 * order, -ROOM_HEIGHT / 2, -ROOM_WIDTH / 4]
+  ), [order])
+
+  const xRotation = useMemo(() => (
+    isDead ? -Math.PI : -Math.PI / 2
+  ), [isDead])
 
   useEffect(() => {
-    if (animations.length === 0) return;
+    if (animations.length === 0 || isDead) return;
     const fullClip = animations[0]
     // const falling = THREE.AnimationUtils.subclip(fullClip, 'Falling', 0, 30)
     const standing = THREE.AnimationUtils.subclip(fullClip, 'Standing', 31, 150)
@@ -38,7 +46,7 @@ function PlayerModelComponent({ id, order }: PlayerProps) {
     standingAction.play()
 
     return () => { standingAction.reset() }
-  }, [animations, mixer])
+  }, [animations, mixer, isDead])
 
   function handleClick(e: Event) {
     alert(id)
@@ -46,9 +54,17 @@ function PlayerModelComponent({ id, order }: PlayerProps) {
   }
 
   return (
-    <group ref={group} position={position} dispose={null} scale={0.5} onClick={handleClick}>
+    <group
+      ref={group}
+      position={position}
+      dispose={null}
+      scale={0.5}
+      onClick={handleClick}
+      onPointerOver={(e) => { e.stopPropagation(); setIsHovered(true); }}
+      onPointerOut={(e) => { e.stopPropagation(); setIsHovered(false); }}
+    >
       <group name="Sketchfab_Scene">
-        <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]} scale={0.011}>
+        <group name="Sketchfab_model" rotation={[xRotation, 0, 0]} scale={0.011}>
           <group name="17f9d1b3a83741e2a2981db7241c686efbx" rotation={[Math.PI / 2, 0, 0]}>
             <group name="Object_2">
               <group name="RootNode">
@@ -82,6 +98,19 @@ function PlayerModelComponent({ id, order }: PlayerProps) {
           </group>
         </group>
       </group>
+
+      <Html position={[-0.4, 1.5, 0]} style={{ pointerEvents: 'none' }}>
+        <div className="flex justify-center w-[85px]">
+          <h3 className="text-lg font-bold text-white [text-shadow:_0_0_2px_black,0_0_2px_black,0_0_2px_black,0_0_2px_black]">
+            {name}
+          </h3>
+        </div>
+      </Html>
+
+      {/* Hover effects */}
+      {isHovered && (
+        <TallGlow color="#00ffff" height={1.25} width={0.5} intensity={0.5} />
+      )}
     </group>
   )
 }
