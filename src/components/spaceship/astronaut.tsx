@@ -10,6 +10,7 @@ interface PlayerProps {
   id: string,
   order: number,
   isDead: boolean,
+  isCaptain: boolean,
   name: string,
   nPlayers: number,
 }
@@ -18,7 +19,7 @@ const GAP_BETWEEN_PLAYERS = 0.6
 
 const gltfPath = "/models/little_astronaut/scene.gltf"
 
-function PlayerModelComponent({ id, order, isDead, name, nPlayers }: PlayerProps) {
+function PlayerModelComponent({ id, order, isDead, isCaptain, name, nPlayers }: PlayerProps) {
   const group = useRef(null)
   const { scene, materials, animations } = useGLTF(gltfPath)
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
@@ -102,13 +103,28 @@ function PlayerModelComponent({ id, order, isDead, name, nPlayers }: PlayerProps
         </group>
       </group>
 
-      <Html position={[-0.15, 1.5, 0]} style={{ pointerEvents: 'none' }}>
-        <div className="flex justify-center">
-          <h3 className="text-sm text-white [text-shadow:_0_0_2px_black,0_0_2px_black,0_0_2px_black,0_0_2px_black]">
+      {/* Player name and status */}
+      <Html position={[0, 1.8, 0]} style={{ pointerEvents: 'none', width: '100%', textAlign: 'center' }}>
+        <div className="flex flex-col items-center gap-1">
+          <h3 className="text-sm text-white [text-shadow:_0_0_2px_black,0_0_2px_black,0_0_2px_black,0_0_2px_black] whitespace-nowrap">
             {name}
           </h3>
+          <div className={`text-xs px-1 rounded ${isDead ? 'bg-red-500' : 'bg-green-500'} text-white whitespace-nowrap`}>
+            {isDead ? 'DEAD' : 'ALIVE'}
+          </div>
         </div>
       </Html>
+
+      {/* Captain tag */}
+      {isCaptain && (
+        <Html position={[0, -0.1, 0]} style={{ pointerEvents: 'none', width: '100%', textAlign: 'center' }}>
+          <div className="flex items-center justify-center">
+            <h3 className="text-xs px-1 rounded-full bg-orange-500 text-white whitespace-nowrap">
+              Captain
+            </h3>
+          </div>
+        </Html>
+      )}
 
       {/* Hover effects */}
       {isHovered && (

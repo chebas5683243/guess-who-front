@@ -13,8 +13,9 @@ const Y_DELTA_FROM_CAMERA = 0.4
 const players = Array(10).fill(0).map((_, index) => ({
   id: crypto.randomUUID(),
   isDead: Math.random() > 0.5,
-  name: "bab",
-  order: index + 1
+  name: "chebas568",
+  order: index + 1,
+  isCaptain: Math.random() > 0.5,
 }))
 
 function MainRoomComponent() {
@@ -53,7 +54,7 @@ function MainRoomComponent() {
 
       {players.map((player) => (
         <Suspense key={player.id} fallback={null}>
-          <PlayerModel id={player.id} order={player.order} isDead={player.isDead} name={player.name} nPlayers={players.length} />
+          <PlayerModel id={player.id} order={player.order} isDead={player.isDead} name={player.name} nPlayers={players.length} isCaptain={player.isCaptain} />
         </Suspense>
       ))}
     </group>

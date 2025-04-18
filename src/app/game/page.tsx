@@ -34,7 +34,7 @@ export default function GamePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 to-transparent" />
       </div>
 
-      <Scene currentDay={currentDay} totalDays={totalDays} cameraRef={controlsRef} />
+      <Scene currentDay={currentDay} totalDays={totalDays} cameraRef={controlsRef} isCaptain={true} />
 
       {/* Game UI Overlay */}
       <div className="absolute top-4 left-4 text-cyan-300 bg-black/30 p-4 rounded-lg backdrop-blur-sm border border-cyan-500/30 z-20">
@@ -46,7 +46,7 @@ export default function GamePage() {
         </p>
       </div>
 
-      <div className="absolute bottom-4 left-4 flex gap-2 z-20">
+      <div className="absolute top-4 right-4 flex gap-2 z-20">
         <button
           className="px-4 py-2 bg-cyan-900/50 text-cyan-300 rounded border border-cyan-500/30 backdrop-blur-sm 
                      hover:bg-cyan-800/50 transition-colors cursor-pointer"
