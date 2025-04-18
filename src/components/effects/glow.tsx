@@ -1,7 +1,7 @@
 import { extend } from '@react-three/fiber'
 import { shaderMaterial } from '@react-three/drei'
 import * as THREE from 'three'
-import type { Object3DNode } from '@react-three/fiber'
+import React from 'react'
 
 const GlowMaterial = shaderMaterial(
   {
@@ -37,7 +37,15 @@ extend({ GlowMaterial })
 // Add type support for the custom shader material
 declare module '@react-three/fiber' {
   interface ThreeElements {
-    glowMaterial: Object3DNode<typeof GlowMaterial, typeof GlowMaterial>
+    glowMaterial: {
+      color?: THREE.Color | string
+      viewVector?: THREE.Vector3
+      glowIntensity?: number
+      transparent?: boolean
+      depthWrite?: boolean
+      side?: THREE.Side
+      blending?: THREE.Blending
+    }
   }
 }
 
@@ -52,9 +60,10 @@ export function Glow({ color = '#00ffff', scale = 1.2, intensity = 0.5 }: GlowPr
     <mesh scale={scale}>
       <sphereGeometry args={[1, 32, 32]} />
       <glowMaterial
-        transparent
         color={new THREE.Color(color)}
         glowIntensity={intensity}
+        viewVector={new THREE.Vector3(0, 0, 1)}
+        transparent
         depthWrite={false}
         side={THREE.BackSide}
         blending={THREE.AdditiveBlending}
