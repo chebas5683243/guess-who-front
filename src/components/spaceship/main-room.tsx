@@ -53,27 +53,9 @@ function MainRoomComponent() {
 
       {players.map((player) => (
         <Suspense key={player.id} fallback={null}>
-          <PlayerModel id={player.id} order={player.order} isDead={player.isDead} name={player.name} />
+          <PlayerModel id={player.id} order={player.order} isDead={player.isDead} name={player.name} nPlayers={players.length} />
         </Suspense>
       ))}
-
-      {/* Window frame */}
-      {/* <group position={[0, 1.4, 3.8]}> */}
-      {/* Top frame */}
-      {/* <mesh position={[0, 1.5, 0.1]}>
-          <boxGeometry args={[8, 0.2, 0.2]} />
-          <meshStandardMaterial
-            color={Color.NAMES.aliceblue}
-          />
-        </mesh> */}
-      {/* Bottom frame */}
-      {/* <mesh position={[0, -1.5, 0.1]}>
-          <boxGeometry args={[8, 0.2, 0.2]} />
-          <meshStandardMaterial
-            color={Color.NAMES.aliceblue}
-          />
-        </mesh>
-      </group> */}
     </group>
   )
 }

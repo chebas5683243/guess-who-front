@@ -1,9 +1,7 @@
-import { Sphere, useTexture } from "@react-three/drei";
+import { Html, Sphere, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef, useState } from "react";
 import * as THREE from 'three'
-import { Glow } from "../effects/glow";
-import { HoverInfo } from "../ui/hover-info";
 
 interface PlanetProps {
   currentDay: number;
@@ -17,7 +15,8 @@ const DELTA_FROM_CENTER = {
   z: { start: 2000, end: 160 },
 }
 
-const RED_AURA = new THREE.Color('#600000');
+const DARK_RED = new THREE.Color('#800000');
+const RED = new THREE.Color('#f00000');
 
 function calculatePlanetScale(currentDay: number, totalDays: number) {
   const distancePerDay = (DELTA_FROM_CENTER.z.start - DELTA_FROM_CENTER.z.end) / (totalDays - 1)
@@ -71,14 +70,15 @@ export const Planet = ({ currentDay, totalDays }: PlanetProps) => {
         />
       </Sphere>
 
+
       {/* Spore clouds */}
       <group ref={sporesRef}>
         <Sphere args={[PLANET_RADIUS * 1.05, 64, 64]} scale={scale}>
           <meshPhysicalMaterial
-            color={RED_AURA}
+            color={isHovered ? RED : DARK_RED}
             transparent
             opacity={0.15}
-            emissive={RED_AURA}
+            emissive={isHovered ? RED : DARK_RED}
             emissiveIntensity={1}
           />
         </Sphere>
@@ -87,11 +87,13 @@ export const Planet = ({ currentDay, totalDays }: PlanetProps) => {
       {/* Hover glow effect */}
       {isHovered && (
         <>
-          <Glow color="#ff0000" scale={1.2} intensity={0.5} />
-          <HoverInfo
-            title="Zerus"
-            position={[6 * scale, 6 * scale, 0]}
-          />
+          <Html position={[PLANET_RADIUS * scale, PLANET_RADIUS * scale / 1.25, 0]} style={{ pointerEvents: 'none' }}>
+            <div className="w-fit">
+              <h3 className="text-sm font-bold mb-2 text-white [text-shadow:_0_0_2px_black,0_0_2px_black,0_0_2px_black,0_0_2px_black]">
+                Zerus
+              </h3>
+            </div>
+          </Html>
         </>
       )}
     </group>

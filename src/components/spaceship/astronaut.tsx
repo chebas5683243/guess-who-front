@@ -11,11 +11,14 @@ interface PlayerProps {
   order: number,
   isDead: boolean,
   name: string,
+  nPlayers: number,
 }
+
+const GAP_BETWEEN_PLAYERS = 0.6
 
 const gltfPath = "/models/little_astronaut/scene.gltf"
 
-function PlayerModelComponent({ id, order, isDead, name }: PlayerProps) {
+function PlayerModelComponent({ id, order, isDead, name, nPlayers }: PlayerProps) {
   const group = useRef(null)
   const { scene, materials, animations } = useGLTF(gltfPath)
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
@@ -24,8 +27,8 @@ function PlayerModelComponent({ id, order, isDead, name }: PlayerProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   const position: [number, number, number] = useMemo(() => (
-    [-2.75 + 0.5 * order, -ROOM_HEIGHT / 2, -ROOM_WIDTH / 4]
-  ), [order])
+    [-GAP_BETWEEN_PLAYERS * (order - (nPlayers + 1) / 2), -ROOM_HEIGHT / 2, -ROOM_WIDTH / 4]
+  ), [order, nPlayers])
 
   const xRotation = useMemo(() => (
     isDead ? -Math.PI : -Math.PI / 2
@@ -99,9 +102,9 @@ function PlayerModelComponent({ id, order, isDead, name }: PlayerProps) {
         </group>
       </group>
 
-      <Html position={[-0.4, 1.5, 0]} style={{ pointerEvents: 'none' }}>
-        <div className="flex justify-center w-[85px]">
-          <h3 className="text-lg font-bold text-white [text-shadow:_0_0_2px_black,0_0_2px_black,0_0_2px_black,0_0_2px_black]">
+      <Html position={[-0.15, 1.5, 0]} style={{ pointerEvents: 'none' }}>
+        <div className="flex justify-center">
+          <h3 className="text-sm text-white [text-shadow:_0_0_2px_black,0_0_2px_black,0_0_2px_black,0_0_2px_black]">
             {name}
           </h3>
         </div>
