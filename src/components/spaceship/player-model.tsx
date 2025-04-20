@@ -11,7 +11,7 @@ interface PlayerProps {
   order: number,
   isDead: boolean,
   isCaptain: boolean,
-  name: string,
+  username: string,
   nPlayers: number,
 }
 
@@ -19,7 +19,7 @@ const GAP_BETWEEN_PLAYERS = 0.6
 
 const gltfPath = "/models/little_astronaut/scene.gltf"
 
-function PlayerModelComponent({ id, order, isDead, isCaptain, name, nPlayers }: PlayerProps) {
+function PlayerModelComponent({ id, order, isDead, isCaptain, username: name, nPlayers }: PlayerProps) {
   const group = useRef(null)
   const { scene, materials, animations } = useGLTF(gltfPath)
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])

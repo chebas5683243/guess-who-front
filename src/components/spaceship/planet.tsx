@@ -1,12 +1,8 @@
+import { useGameStore } from "@/stores/use-game-store";
 import { Html, Sphere, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef, useState } from "react";
 import * as THREE from 'three'
-
-interface PlanetProps {
-  currentDay: number;
-  totalDays: number;
-}
 
 const PLANET_RADIUS = 10
 const DELTA_FROM_CENTER = {
@@ -36,7 +32,10 @@ function calculatePlanetXYPosition(currentDay: number, totalDays: number) {
   }
 }
 
-export const Planet = ({ currentDay, totalDays }: PlanetProps) => {
+export const Planet = () => {
+  const currentDay = useGameStore(state => state.currentDay)
+  const totalDays = useGameStore(state => state.nPlayers)
+
   const planetRef = useRef<THREE.Group>(null)
   const sporesRef = useRef<THREE.Mesh>(null)
   const [isHovered, setIsHovered] = useState(false)
