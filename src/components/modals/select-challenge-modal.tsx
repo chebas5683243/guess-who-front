@@ -23,7 +23,7 @@ export function SelectChallengeModal() {
       <DialogContent className="bg-black/90 border-2 border-cyan-500/20 p-4 w-[800px] sm:max-w-[900px] backdrop-blur-md z-[100]">
         <DialogHeader className="border-b-2 border-cyan-500/20 pb-2">
           <DialogTitle className="text-xl font-starcraft tracking-wider text-cyan-300">
-            SELECT MISSION
+            SELECT CHALLENGE
           </DialogTitle>
         </DialogHeader>
 

@@ -95,7 +95,7 @@ export function ControlPanel() {
                 variant={isGameStarted ? "secondary" : "primary"}
                 className="w-full"
               >
-                {isGameStarted ? "MISSION IN PROGRESS" : "LAUNCH MISSION"}
+                {isGameStarted ? "MISSION IN PROGRESS" : "LAUNCH CHALLENGE"}
               </StarcraftButton>
             </div>
           </div>
