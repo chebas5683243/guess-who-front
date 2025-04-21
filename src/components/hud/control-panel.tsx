@@ -1,12 +1,20 @@
 import { useGameStore } from "@/stores/use-game-store"
 import { StarcraftButton } from "../ui/starcraft-button"
 import { useModal } from "@/stores/use-modal-store"
+import { useMemo } from "react"
+import { generateChallenges } from "@/models/challenge"
 
 export function ControlPanel() {
   const currentDay = useGameStore(state => state.currentDay)
   const totalDays = useGameStore(state => state.nPlayers)
   const selectedPlayers = useGameStore(state => state.selectedPlayers)
   const isGameStarted = useGameStore(state => state.isGameStarted)
+  const selectedChallenge = useGameStore(state => state.selectedChallenge)
+
+  const challenge = useMemo(() => {
+    return generateChallenges().find(c => c.id === selectedChallenge)
+  }, [selectedChallenge])
+
   const { onOpen } = useModal()
 
   const handleSelectChallenge = () => {
@@ -28,23 +36,31 @@ export function ControlPanel() {
 
         {/* Main Content */}
         <div className="grid grid-cols-3 gap-4">
-          {/* Task Section */}
+          {/* Challenge Section */}
           <div className="flex flex-col gap-2 p-3 rounded-lg border-2 border-cyan-500/20 bg-black/60">
-            <h3 className="text-lg font-starcraft tracking-wider text-cyan-300">CURRENT TASK</h3>
-            <div className="flex flex-col gap-1">
-              <p className="text-cyan-400/80 font-starcraft tracking-wider">
-                SIGNAL SKETCH
-              </p>
-              <p className="text-sm text-cyan-500/60 font-starcraft tracking-wider">
-                Complete the signal sketch to communicate with the alien planet
-              </p>
+            <h3 className="text-lg font-starcraft tracking-wider text-cyan-300">CURRENT CHALLENGE</h3>
+            <div className="flex flex-col flex-1 justify-between">
+              {challenge ?
+                <div className="flex flex-col gap-1">
+                  <p className="text-cyan-400/80 font-starcraft tracking-wider">
+                    {challenge ? challenge.name : "NO CHALLENGE SELECTED YET"}
+                  </p>
+                  <p className="text-sm text-cyan-500/60 font-starcraft tracking-wider">
+                    {challenge ? challenge.tagline : "-"}
+                  </p>
+                </div>
+                :
+                <p className="text-sm text-cyan-500/60 font-starcraft tracking-wider">
+                  NO CHALLENGE SELECTED
+                </p>
+              }
               <StarcraftButton
                 size="sm"
                 variant="secondary"
                 onClick={handleSelectChallenge}
                 className="mt-2"
               >
-                MODIFY TASK
+                {challenge ? "MODIFY CHALLENGE" : "SELECT CHALLENGE"}
               </StarcraftButton>
             </div>
           </div>

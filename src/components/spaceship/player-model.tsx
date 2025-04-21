@@ -13,13 +13,14 @@ interface PlayerProps {
   isCaptain: boolean,
   username: string,
   nPlayers: number,
+  hideTags: boolean,
 }
 
 const GAP_BETWEEN_PLAYERS = 0.6
 
 const gltfPath = "/models/little_astronaut/scene.gltf"
 
-function PlayerModelComponent({ id, order, isDead, isCaptain, username: name, nPlayers }: PlayerProps) {
+function PlayerModelComponent({ id, order, isDead, isCaptain, username: name, nPlayers, hideTags }: PlayerProps) {
   const group = useRef(null)
   const { scene, materials, animations } = useGLTF(gltfPath)
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
@@ -104,19 +105,21 @@ function PlayerModelComponent({ id, order, isDead, isCaptain, username: name, nP
       </group>
 
       {/* Player name and status */}
-      <Html position={[0, 1.8, 0]} style={{ pointerEvents: 'none', width: '100%', textAlign: 'center' }}>
-        <div className="flex flex-col items-center gap-1">
-          <h3 className="text-sm text-white [text-shadow:_0_0_2px_black,0_0_2px_black,0_0_2px_black,0_0_2px_black] whitespace-nowrap">
-            {name}
-          </h3>
-          <div className={`text-xs px-1 rounded ${isDead ? 'bg-red-500' : 'bg-green-500'} text-white whitespace-nowrap`}>
-            {isDead ? 'DEAD' : 'ALIVE'}
+      {!hideTags &&
+        <Html position={[0, 1.8, 0]} style={{ pointerEvents: 'none', width: '100%', textAlign: 'center' }}>
+          <div className="flex flex-col items-center gap-1">
+            <h3 className="text-sm text-white [text-shadow:_0_0_2px_black,0_0_2px_black,0_0_2px_black,0_0_2px_black] whitespace-nowrap">
+              {name}
+            </h3>
+            <div className={`text-xs px-1 rounded ${isDead ? 'bg-red-500' : 'bg-green-500'} text-white whitespace-nowrap`}>
+              {isDead ? 'DEAD' : 'ALIVE'}
+            </div>
           </div>
-        </div>
-      </Html>
+        </Html>
+      }
 
       {/* Captain tag */}
-      {isCaptain && (
+      {!hideTags && isCaptain && (
         <Html position={[0, -0.1, 0]} style={{ pointerEvents: 'none', width: '100%', textAlign: 'center' }}>
           <div className="flex items-center justify-center">
             <h3 className="text-xs px-1 rounded-full bg-orange-500 text-white whitespace-nowrap">

@@ -6,9 +6,10 @@ interface GameState {
   players: Player[];
   nPlayers: number;
   currentDay: number;
-  selectedPlayers: string[];
-  selectedTask: string;
   isGameStarted: boolean;
+
+  selectedPlayers: string[];
+  selectedChallenge: string;
 }
 
 interface GameActions {
@@ -16,7 +17,8 @@ interface GameActions {
   goToFirstDay: () => void;
   goToNextDay: () => void;
   goToPreviousDay: () => void;
-  // Add your game actions here
+
+  updateChallenge: (challengeId: string) => void;
 }
 
 const PLAYERS_NUMBER = 10;
@@ -27,7 +29,7 @@ export const useGameStore = create<GameState & GameActions>()(
     nPlayers: PLAYERS_NUMBER,
     currentDay: PLAYERS_NUMBER,
     selectedPlayers: [],
-    selectedTask: "",
+    selectedChallenge: "",
     isGameStarted: false,
 
     goToFirstDay: () =>
@@ -47,6 +49,9 @@ export const useGameStore = create<GameState & GameActions>()(
         state.currentDay -= 1;
       }),
 
-    // Add your game actions here
+    updateChallenge: (challengeId) =>
+      set((state) => {
+        state.selectedChallenge = challengeId;
+      }),
   }))
 );

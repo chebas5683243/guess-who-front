@@ -1,11 +1,11 @@
 import { useGameStore } from "@/stores/use-game-store"
 import { Suspense } from "react"
 import { PlayerModel } from "./player-model"
+import { useModal } from "@/stores/use-modal-store"
 
 export function Players() {
   const players = useGameStore((state) => state.players)
-
-  console.log("asd")
+  const anyModalOpen = useModal((state) => state.isOpen)
 
   return (
     <>
@@ -18,6 +18,7 @@ export function Players() {
             username={player.username}
             nPlayers={players.length}
             isCaptain={player.isCaptain}
+            hideTags={anyModalOpen}
           />
         </Suspense>
       ))}

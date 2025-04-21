@@ -2,9 +2,7 @@ import { create } from "zustand";
 
 export type SelectChallengeModalProps = {
   modalType: "selectChallenge";
-  data?: {
-    previousSelection: string;
-  };
+  data?: undefined;
 };
 
 export type ModalProps = SelectChallengeModalProps;

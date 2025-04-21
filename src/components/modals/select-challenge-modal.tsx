@@ -1,18 +1,25 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogOverlay, DialogTitle } from "../ui/dialog"
 import { StarcraftButton } from "../ui/starcraft-button"
 import { useModal } from "@/stores/use-modal-store"
 import { generateChallenges } from "@/models/challenge"
+import { useGameStore } from "@/stores/use-game-store"
+
+const challenges = generateChallenges()
 
 export function SelectChallengeModal() {
   const { type, isOpen, onClose } = useModal()
-  const challenges = generateChallenges()
+  const updateChallenge = useGameStore(state => state.updateChallenge)
 
   const isModalOpen = isOpen && type === "selectChallenge";
 
-  // const modalData = data as SelectChallengeModalProps["data"];
+  function onSelectChallenge(challengeId: string) {
+    updateChallenge(challengeId)
+    onClose()
+  }
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
+      <DialogOverlay className="bg-black/50 backdrop-blur-sm" />
       <DialogContent className="bg-black/90 border-2 border-cyan-500/20 p-4 w-[800px] sm:max-w-[900px] backdrop-blur-md z-[100]">
         <DialogHeader className="border-b-2 border-cyan-500/20 pb-2">
           <DialogTitle className="text-xl font-starcraft tracking-wider text-cyan-300">
@@ -46,10 +53,7 @@ export function SelectChallengeModal() {
                 <StarcraftButton
                   size="sm"
                   variant="primary"
-                  onClick={() => {
-                    // TODO: Handle challenge selection
-                    onClose()
-                  }}
+                  onClick={() => onSelectChallenge(challenge.id)}
                 >
                   SELECT
                 </StarcraftButton>
