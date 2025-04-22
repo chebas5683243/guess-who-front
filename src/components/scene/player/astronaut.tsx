@@ -3,7 +3,7 @@ import { useGLTF, useAnimations, Html } from '@react-three/drei'
 import { SkeletonUtils } from 'three/examples/jsm/Addons.js'
 import { useGraph } from '@react-three/fiber'
 import * as THREE from "three"
-import { TallGlow } from '../effects/glow'
+import { TallGlow } from '../../effects/glow'
 
 const gltfPath = "/models/little_astronaut/scene.gltf"
 

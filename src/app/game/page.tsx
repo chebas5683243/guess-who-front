@@ -1,10 +1,10 @@
 'use client'
 
 import { useRef } from 'react'
-import { Scene } from '@/components/scene'
+import { Scene } from '@/components/scene/scene'
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
-import { ControlPanel } from '@/components/hud/control-panel';
-import { DevToolsHUD } from '@/components/hud/dev-tools';
+import { ControlPanel } from '@/components/hud/captain-panel/captain-panel';
+import { DevToolsHUD } from '@/components/hud/testing/dev-tools';
 import { DaysIndicator } from '@/components/hud/days-indicator';
 
 export default function GamePage() {
@@ -22,7 +22,7 @@ export default function GamePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 to-transparent" />
       </div>
 
-      <Scene cameraRef={controlsRef} isCaptain={true} />
+      <Scene cameraRef={controlsRef} />
 
       {/* Game HUD */}
       <ControlPanel />
