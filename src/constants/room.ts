@@ -1,0 +1,6 @@
+export const ROOM_DIMENSIONS = {
+  HEIGHT: 3,
+  WIDTH: 8,
+  DEPTH: 6,
+  Y_DELTA_FROM_CAMERA: 0.4,
+};

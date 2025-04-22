@@ -1,43 +1,29 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
+import React, { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import { useGLTF, useAnimations, Html } from '@react-three/drei'
 import { SkeletonUtils } from 'three/examples/jsm/Addons.js'
 import { useGraph } from '@react-three/fiber'
 import * as THREE from "three"
-import { ROOM_HEIGHT, ROOM_WIDTH } from './main-room'
 import { TallGlow } from '../effects/glow'
-
-interface PlayerProps {
-  id: string,
-  order: number,
-  isDead: boolean,
-  isCaptain: boolean,
-  username: string,
-  nPlayers: number,
-  hideTags: boolean,
-}
-
-const GAP_BETWEEN_PLAYERS = 0.6
 
 const gltfPath = "/models/little_astronaut/scene.gltf"
 
-function PlayerModelComponent({ id, order, isDead, isCaptain, username: name, nPlayers, hideTags }: PlayerProps) {
+type AstronautModelProps = PropsWithChildren<{
+  position: [number, number, number];
+  xRotation: number;
+  animate: boolean;
+  onClick: () => void;
+  onPointerOver: () => void;
+  onPointerOut: () => void;
+}>
+function Astronaut({ position, xRotation, animate, onClick, children, onPointerOver, onPointerOut }: AstronautModelProps) {
   const group = useRef(null)
   const { scene, materials, animations } = useGLTF(gltfPath)
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes } = useGraph(clone)
   const { mixer } = useAnimations(clone.animations, group)
-  const [isHovered, setIsHovered] = useState(false)
-
-  const position: [number, number, number] = useMemo(() => (
-    [-GAP_BETWEEN_PLAYERS * (order - (nPlayers + 1) / 2), -ROOM_HEIGHT / 2, -ROOM_WIDTH / 4]
-  ), [order, nPlayers])
-
-  const xRotation = useMemo(() => (
-    isDead ? -Math.PI : -Math.PI / 2
-  ), [isDead])
 
   useEffect(() => {
-    if (animations.length === 0 || isDead) return;
+    if (animations.length === 0 || !animate) return;
     const fullClip = animations[0]
     // const falling = THREE.AnimationUtils.subclip(fullClip, 'Falling', 0, 30)
     const standing = THREE.AnimationUtils.subclip(fullClip, 'Standing', 31, 150)
@@ -51,11 +37,21 @@ function PlayerModelComponent({ id, order, isDead, isCaptain, username: name, nP
     standingAction.play()
 
     return () => { standingAction.reset() }
-  }, [animations, mixer, isDead])
+  }, [animations, mixer, animate])
 
   function handleClick(e: Event) {
-    alert(id)
-    e.stopPropagation()
+    e.stopPropagation();
+    onClick();
+  }
+
+  function handlePointerOver(e: Event) {
+    e.stopPropagation();
+    onPointerOver();
+  }
+
+  function handlePointerOut(e: Event) {
+    e.stopPropagation();
+    onPointerOut();
   }
 
   return (
@@ -65,8 +61,8 @@ function PlayerModelComponent({ id, order, isDead, isCaptain, username: name, nP
       dispose={null}
       scale={0.5}
       onClick={handleClick}
-      onPointerOver={(e) => { e.stopPropagation(); setIsHovered(true); }}
-      onPointerOut={(e) => { e.stopPropagation(); setIsHovered(false); }}
+      onPointerOver={handlePointerOver}
+      onPointerOut={handlePointerOut}
     >
       <group name="Sketchfab_Scene">
         <group name="Sketchfab_model" rotation={[xRotation, 0, 0]} scale={0.011}>
@@ -103,40 +99,41 @@ function PlayerModelComponent({ id, order, isDead, isCaptain, username: name, nP
           </group>
         </group>
       </group>
-
-      {/* Player name and status */}
-      {!hideTags &&
-        <Html position={[0, 1.8, 0]} style={{ pointerEvents: 'none', width: '100%', textAlign: 'center' }}>
-          <div className="flex flex-col items-center gap-1">
-            <h3 className="text-sm text-white [text-shadow:_0_0_2px_black,0_0_2px_black,0_0_2px_black,0_0_2px_black] whitespace-nowrap">
-              {name}
-            </h3>
-            <div className={`text-xs px-1 rounded ${isDead ? 'bg-red-500' : 'bg-green-500'} text-white whitespace-nowrap`}>
-              {isDead ? 'DEAD' : 'ALIVE'}
-            </div>
-          </div>
-        </Html>
-      }
-
-      {/* Captain tag */}
-      {!hideTags && isCaptain && (
-        <Html position={[0, -0.1, 0]} style={{ pointerEvents: 'none', width: '100%', textAlign: 'center' }}>
-          <div className="flex items-center justify-center">
-            <h3 className="text-xs px-1 rounded-full bg-orange-500 text-white whitespace-nowrap">
-              Captain
-            </h3>
-          </div>
-        </Html>
-      )}
-
-      {/* Hover effects */}
-      {isHovered && (
-        <TallGlow color="#00ffff" height={1.25} width={0.5} intensity={0.5} />
-      )}
+      {children}
     </group>
   )
 }
 
-export const PlayerModel = memo(PlayerModelComponent)
+type AstronautGlowProps = {
+  color: string
+  active: boolean
+}
+function AstronautGlow({ active, color }: AstronautGlowProps) {
+  if (!active) return null;
+  return (
+    <TallGlow color={color} height={1.25} width={0.5} intensity={0.5} />
+  )
+}
+
+type AstronautHTMLContentProps = PropsWithChildren<{
+  position: "top" | "bottom";
+}>
+function AstronautHTMLContent({ position, children }: AstronautHTMLContentProps) {
+  const positionVector: [number, number, number] = useMemo(() => {
+    if (position === "bottom") return [0, -0.1, 0]
+    if (position === "top") return [0, 1.8, 0]
+    return [0, 0, 0]
+  }, [position])
+
+  return (
+    <Html position={positionVector} className="pointer-events-none select-none w-full text-center">
+      {children}
+    </Html>
+  )
+}
+
+Astronaut.Html = AstronautHTMLContent
+Astronaut.Glow = AstronautGlow
+export { Astronaut as AstronautModel }
 
 useGLTF.preload(gltfPath)

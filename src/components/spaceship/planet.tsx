@@ -38,6 +38,7 @@ export const Planet = () => {
 
   const planetRef = useRef<THREE.Group>(null)
   const sporesRef = useRef<THREE.Mesh>(null)
+  const materialRef = useRef<THREE.MeshPhysicalMaterial>(null)
   const [isHovered, setIsHovered] = useState(false)
   const texture = useTexture('/mars.jpg')
 
@@ -53,6 +54,12 @@ export const Planet = () => {
     if (sporesRef.current) {
       sporesRef.current.scale.setScalar(1 + Math.sin(clock.getElapsedTime() * 0.5) * 0.02)
     }
+
+    if (materialRef.current) {
+      materialRef.current.color.lerp(isHovered ? RED : DARK_RED, 0.1);
+      materialRef.current.emissive.lerp(isHovered ? RED : DARK_RED, 0.1);
+    }
+
   })
 
   return (
@@ -74,10 +81,11 @@ export const Planet = () => {
       <group ref={sporesRef}>
         <Sphere args={[PLANET_RADIUS * 1.05, 64, 64]} scale={scale}>
           <meshPhysicalMaterial
-            color={isHovered ? RED : DARK_RED}
+            ref={materialRef}
+            color={DARK_RED}
             transparent
             opacity={0.15}
-            emissive={isHovered ? RED : DARK_RED}
+            emissive={DARK_RED}
             emissiveIntensity={1}
           />
         </Sphere>

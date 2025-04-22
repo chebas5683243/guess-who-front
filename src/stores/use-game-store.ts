@@ -19,6 +19,7 @@ interface GameActions {
   goToPreviousDay: () => void;
 
   updateChallenge: (challengeId: string) => void;
+  selectPlayer: (playerId: string) => void;
 }
 
 const PLAYERS_NUMBER = 10;
@@ -52,6 +53,22 @@ export const useGameStore = create<GameState & GameActions>()(
     updateChallenge: (challengeId) =>
       set((state) => {
         state.selectedChallenge = challengeId;
+      }),
+
+    selectPlayer: (playerId) =>
+      set((state) => {
+        const alreadySelected = state.selectedPlayers.some(
+          (sp) => sp === playerId
+        );
+
+        if (alreadySelected) {
+          state.selectedPlayers = state.selectedPlayers.filter(
+            (sp) => sp !== playerId
+          );
+          return;
+        }
+
+        state.selectedPlayers.push(playerId);
       }),
   }))
 );

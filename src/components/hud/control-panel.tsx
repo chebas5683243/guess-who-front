@@ -5,11 +5,14 @@ import { useMemo } from "react"
 import { generateChallenges } from "@/models/challenge"
 
 export function ControlPanel() {
+  const selectedChallenge = useGameStore(state => state.selectedChallenge)
+
+  const selectedPlayers = useGameStore(state => state.selectedPlayers)
+  const players = useGameStore(state => state.players)
+
   const currentDay = useGameStore(state => state.currentDay)
   const totalDays = useGameStore(state => state.nPlayers)
-  const selectedPlayers = useGameStore(state => state.selectedPlayers)
   const isGameStarted = useGameStore(state => state.isGameStarted)
-  const selectedChallenge = useGameStore(state => state.selectedChallenge)
 
   const challenge = useMemo(() => {
     return generateChallenges().find(c => c.id === selectedChallenge)
@@ -67,14 +70,18 @@ export function ControlPanel() {
 
           {/* Selected Players Section */}
           <div className="flex flex-col gap-2 p-3 rounded-lg border-2 border-cyan-500/20 bg-black/60">
-            <h3 className="text-lg font-starcraft tracking-wider text-cyan-300">SELECTED UNITS</h3>
-            <div className="flex flex-col gap-1">
+            <h3 className="text-lg font-starcraft tracking-wider text-cyan-300">SELECTED PLAYERS</h3>
+            <div className="grid grid-cols-2 grid-rows-2">
               {selectedPlayers.length > 0 ? (
-                selectedPlayers.map((player: string) => (
-                  <p key={player} className="text-cyan-400/80 font-starcraft tracking-wider">
-                    {player.toUpperCase()}
-                  </p>
-                ))
+                selectedPlayers.map((selectedPlayerId) => {
+                  const player = players.find(p => p.id === selectedPlayerId)
+                  if (!player) return null;
+                  return (
+                    <p key={player.id} className="text-cyan-400/80 font-starcraft tracking-wider">
+                      {player.username}
+                    </p>
+                  )
+                })
               ) : (
                 <p className="text-sm text-cyan-500/60 font-starcraft tracking-wider">
                   NO UNITS SELECTED
