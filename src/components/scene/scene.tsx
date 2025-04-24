@@ -14,7 +14,7 @@ export function Scene({ cameraRef }: SceneProps) {
       <Canvas camera={{ position: [0, 0, 1.5], fov: 75 }}>
         <color attach="background" args={['#040404']} />
         <ambientLight intensity={0.4} />
-        <pointLight position={[0, 4, -2]} intensity={20} distance={50} color="red" />
+        <pointLight position={[0, 4, -2]} intensity={20} distance={50} color="#ff0000" />
         <OrbitControls ref={cameraRef} enableRotate={true} enableZoom={true} minDistance={0.001} />
 
         <Stars radius={100} depth={50} count={5000} factor={4} saturation={1} fade speed={1} />

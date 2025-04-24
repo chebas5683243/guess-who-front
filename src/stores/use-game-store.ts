@@ -10,6 +10,7 @@ interface GameState {
 
   selectedPlayers: string[];
   selectedChallenge: string;
+  maxPlayersPerChallenge: number;
 }
 
 interface GameActions {
@@ -24,6 +25,12 @@ interface GameActions {
 
 const PLAYERS_NUMBER = 10;
 
+function getMaxPlayersPerChallenge(nPlayers: number) {
+  if (nPlayers <= 5) return 2;
+  if (nPlayers <= 8) return 3;
+  return 4;
+}
+
 export const useGameStore = create<GameState & GameActions>()(
   immer((set) => ({
     players: generateRandomPlayers(PLAYERS_NUMBER),
@@ -32,6 +39,7 @@ export const useGameStore = create<GameState & GameActions>()(
     selectedPlayers: [],
     selectedChallenge: "",
     isGameStarted: false,
+    maxPlayersPerChallenge: getMaxPlayersPerChallenge(PLAYERS_NUMBER),
 
     goToFirstDay: () =>
       set((state) => {
@@ -65,6 +73,10 @@ export const useGameStore = create<GameState & GameActions>()(
           state.selectedPlayers = state.selectedPlayers.filter(
             (sp) => sp !== playerId
           );
+          return;
+        }
+
+        if (state.maxPlayersPerChallenge === state.selectedPlayers.length) {
           return;
         }
 

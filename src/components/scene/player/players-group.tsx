@@ -24,6 +24,7 @@ export function PlayersGroup() {
               isCaptain={player.isCaptain}
               hideTags={anyModalOpen}
               isSelected={isSelected}
+              color={player.color}
             />
           </Suspense>
         )

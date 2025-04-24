@@ -9,6 +9,7 @@ const challenges = generateChallenges()
 export function SelectChallengeModal() {
   const { type, isOpen, onClose } = useModal()
   const updateChallenge = useGameStore(state => state.updateChallenge)
+  const maxPlayersPerChallenge = useGameStore(state => state.maxPlayersPerChallenge)
 
   const isModalOpen = isOpen && type === "selectChallenge";
 
@@ -20,7 +21,7 @@ export function SelectChallengeModal() {
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogOverlay className="bg-black/50 backdrop-blur-sm" />
-      <DialogContent className="bg-black/90 border-2 border-cyan-500/20 p-4 w-[800px] sm:max-w-[900px] backdrop-blur-md z-[100]">
+      <DialogContent className="bg-black/90 border-2 border-cyan-500/20 p-4 w-[800px] sm:max-w-[900px] backdrop-blur-md z-[100] select-none">
         <DialogHeader className="border-b-2 border-cyan-500/20 pb-2">
           <DialogTitle className="text-xl font-starcraft tracking-wider text-cyan-300">
             SELECT CHALLENGE
@@ -48,7 +49,7 @@ export function SelectChallengeModal() {
               </div>
               <div className="flex items-center justify-between mt-2">
                 <span className="text-xs font-starcraft tracking-wider text-cyan-500/60">
-                  REQUIRED PLAYERS: {challenge.nPlayers}
+                  REQUIRED PLAYERS: {maxPlayersPerChallenge}
                 </span>
                 <StarcraftButton
                   size="sm"

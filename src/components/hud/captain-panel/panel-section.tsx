@@ -1,4 +1,5 @@
 import { StarcraftButton } from "@/components/ui/starcraft-button";
+import { cn } from "@/lib/utils";
 import { PropsWithChildren } from "react";
 
 type PanelSectionProps = PropsWithChildren;
@@ -17,10 +18,13 @@ function SectionTitle({ text }: SectionTitleProps) {
   )
 }
 
-type SectionSubtitleProps = { text: string }
-function SectionSubtitle({ text }: SectionSubtitleProps) {
+type SectionSubtitleProps = {
+  className?: string,
+  text: string,
+}
+function SectionSubtitle({ className, text }: SectionSubtitleProps) {
   return (
-    <p className="text-cyan-400/80 font-starcraft tracking-wider uppercase">
+    <p className={cn("text-cyan-400/80 font-starcraft tracking-wider uppercase", className)}>
       {text}
     </p>
   )
@@ -44,14 +48,21 @@ function SectionPlaceholder({ text }: SectionPlaceholderProps) {
   )
 }
 
-type SectionButtonProps = { text: string, onClick: () => void }
-function SectionButton({ text, onClick }: SectionButtonProps) {
+type SectionButtonProps = {
+  className?: string,
+  disabled?: boolean,
+  variant?: "primary" | "secondary",
+  text: string,
+  onClick: () => void,
+}
+function SectionButton({ className, disabled, text, variant = "secondary", onClick }: SectionButtonProps) {
   return (
     <StarcraftButton
-      size="sm"
-      variant="secondary"
+      size={variant === "primary" ? "lg" : "sm"}
+      disabled={!!disabled}
+      variant={variant}
       onClick={onClick}
-      className="mt-2"
+      className={cn("mt-2", className)}
     >
       {text}
     </StarcraftButton>

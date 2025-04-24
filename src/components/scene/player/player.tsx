@@ -12,11 +12,12 @@ interface PlayerProps {
   nPlayers: number,
   hideTags: boolean,
   isSelected: boolean,
+  color: string,
 }
 
 const GAP_BETWEEN_PLAYERS = 0.6
 
-function PlayerComponent({ id, order, isDead, isCaptain, username, nPlayers, hideTags, isSelected }: PlayerProps) {
+function PlayerComponent({ id, order, isDead, isCaptain, username, nPlayers, hideTags, isSelected, color }: PlayerProps) {
   const [isHovered, setIsHovered] = useState(false);
   const selectPlayer = useGameStore(state => state.selectPlayer)
 
@@ -46,6 +47,7 @@ function PlayerComponent({ id, order, isDead, isCaptain, username, nPlayers, hid
       onPointerOut={() => setIsHovered(false)}
       position={position}
       xRotation={xRotation}
+      color={color}
     >
       {/* Player name and status */}
       {!hideTags &&

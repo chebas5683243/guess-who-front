@@ -14,13 +14,32 @@ type AstronautModelProps = PropsWithChildren<{
   onClick: () => void;
   onPointerOver: () => void;
   onPointerOut: () => void;
+  color?: string;
 }>
-function Astronaut({ position, xRotation, animate, onClick, children, onPointerOver, onPointerOut }: AstronautModelProps) {
+
+function Astronaut({
+  position,
+  xRotation,
+  animate,
+  onClick,
+  children,
+  onPointerOver,
+  onPointerOut,
+  color = "#ffffff" // Default white color
+}: AstronautModelProps) {
   const group = useRef(null)
   const { scene, materials, animations } = useGLTF(gltfPath)
   const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes } = useGraph(clone)
   const { mixer } = useAnimations(clone.animations, group)
+
+  // Create a unique material for this instance
+  const material = useMemo(() => {
+    const originalMaterial = materials.Astronaut as THREE.MeshStandardMaterial
+    const newMaterial = originalMaterial.clone()
+    newMaterial.color.set(color)
+    return newMaterial
+  }, [materials.Astronaut, color])
 
   useEffect(() => {
     if (animations.length === 0 || !animate) return;
@@ -82,7 +101,7 @@ function Astronaut({ position, xRotation, animate, onClick, children, onPointerO
                       name="Object_9"
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       geometry={(nodes.Object_9 as any).geometry}
-                      material={materials.Astronaut}
+                      material={material}
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       skeleton={(nodes.Object_9 as any).skeleton}
                     />
