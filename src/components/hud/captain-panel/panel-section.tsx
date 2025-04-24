@@ -30,10 +30,13 @@ function SectionSubtitle({ className, text }: SectionSubtitleProps) {
   )
 }
 
-type SectionDescriptionProps = { text: string }
-function SectionDescription({ text }: SectionDescriptionProps) {
+type SectionDescriptionProps = {
+  className?: string,
+  text: string,
+}
+function SectionDescription({ className, text }: SectionDescriptionProps) {
   return (
-    <p className="text-sm text-cyan-500/60 font-starcraft tracking-wider uppercase">
+    <p className={cn("text-sm text-cyan-500/60 font-starcraft tracking-wider uppercase", className)}>
       {text}
     </p>
   )

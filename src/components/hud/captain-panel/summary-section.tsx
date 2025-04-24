@@ -2,7 +2,11 @@ import { PanelSection } from "./panel-section";
 import { useGameStore } from "@/stores/use-game-store";
 import { StarcraftCheckbox } from "@/components/ui/starcraft-checkbox";
 
-export function SummarySection() {
+interface SummarySectionProps {
+  onLaunchChallenge: () => void
+}
+
+export function SummarySection({ onLaunchChallenge }: SummarySectionProps) {
   const selectedChallenge = useGameStore(state => state.selectedChallenge)
   const selectedPlayers = useGameStore(state => state.selectedPlayers)
   const maxPlayersPerChallenge = useGameStore(state => state.maxPlayersPerChallenge)
@@ -27,7 +31,7 @@ export function SummarySection() {
         <PanelSection.Button
           variant="primary"
           text="Launch challenge"
-          onClick={() => { }}
+          onClick={onLaunchChallenge}
           disabled={!canStartChallenge}
         />
       </div>

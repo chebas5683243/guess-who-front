@@ -5,7 +5,14 @@ export type SelectChallengeModalProps = {
   data?: undefined;
 };
 
-export type ModalProps = SelectChallengeModalProps;
+export type NewChallengeModalProps = {
+  modalType: "newChallenge";
+  data?: {
+    challenge: string;
+  };
+};
+
+export type ModalProps = SelectChallengeModalProps | NewChallengeModalProps;
 export type ModalType = ModalProps["modalType"] | null;
 export type ModalData = ModalProps["data"] | null;
 

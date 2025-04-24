@@ -22,7 +22,10 @@ export function PlayersSection() {
           }
         </div>
         :
-        <PanelSection.Placeholder text="No players selected" />
+        <>
+          <PanelSection.Placeholder text="No players selected" />
+          <PanelSection.Description className="normal-case italic opacity-70" text="Select them by clicking them. Select them by clicking them" />
+        </>
       }
     </PanelSection>
   )

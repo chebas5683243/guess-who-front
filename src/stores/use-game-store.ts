@@ -1,12 +1,15 @@
 import { generateRandomPlayers, Player } from "@/models/player";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import { useModal } from "./use-modal-store";
+import { Challenge, generateChallenges } from "@/models/challenge";
 
 interface GameState {
   players: Player[];
   nPlayers: number;
   currentDay: number;
   isGameStarted: boolean;
+  challenges: Challenge[];
 
   selectedPlayers: string[];
   selectedChallenge: string;
@@ -21,6 +24,7 @@ interface GameActions {
 
   updateChallenge: (challengeId: string) => void;
   selectPlayer: (playerId: string) => void;
+  startChallenge: () => void;
 }
 
 const PLAYERS_NUMBER = 10;
@@ -32,7 +36,7 @@ function getMaxPlayersPerChallenge(nPlayers: number) {
 }
 
 export const useGameStore = create<GameState & GameActions>()(
-  immer((set) => ({
+  immer((set, get) => ({
     players: generateRandomPlayers(PLAYERS_NUMBER),
     nPlayers: PLAYERS_NUMBER,
     currentDay: PLAYERS_NUMBER,
@@ -40,6 +44,7 @@ export const useGameStore = create<GameState & GameActions>()(
     selectedChallenge: "",
     isGameStarted: false,
     maxPlayersPerChallenge: getMaxPlayersPerChallenge(PLAYERS_NUMBER),
+    challenges: generateChallenges(),
 
     goToFirstDay: () =>
       set((state) => {
@@ -82,5 +87,14 @@ export const useGameStore = create<GameState & GameActions>()(
 
         state.selectedPlayers.push(playerId);
       }),
+
+    startChallenge: () => {
+      useModal.getState().onOpen({
+        modalType: "newChallenge",
+        data: {
+          challenge: get().selectedChallenge,
+        },
+      });
+    },
   }))
 );
