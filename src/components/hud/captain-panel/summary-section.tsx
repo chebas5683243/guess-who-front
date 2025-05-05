@@ -1,19 +1,18 @@
 import { PanelSection } from "./panel-section";
-import { useGameStore } from "@/stores/use-game-store";
 import { StarcraftCheckbox } from "@/components/ui/starcraft-checkbox";
+import { useChallenge } from "@/stores/use-challenge-store";
 
 interface SummarySectionProps {
-  onLaunchChallenge: () => void
+  onLaunchChallenge: () => void;
 }
 
 export function SummarySection({ onLaunchChallenge }: SummarySectionProps) {
-  const selectedChallenge = useGameStore(state => state.selectedChallenge)
-  const selectedPlayers = useGameStore(state => state.selectedPlayers)
-  const maxPlayersPerChallenge = useGameStore(state => state.maxPlayersPerChallenge)
+  const challenge = useChallenge((state) => state.challenge);
+  const participantsId = useChallenge((state) => state.participantsId);
 
-  const isChallengeSelected = !!selectedChallenge
-  const arePlayersSelected = maxPlayersPerChallenge === selectedPlayers.length
-  const canStartChallenge = isChallengeSelected && arePlayersSelected
+  const isChallengeSelected = !!challenge;
+  const arePlayersSelected = challenge?.nPlayers === participantsId.length;
+  const canStartChallenge = isChallengeSelected && arePlayersSelected;
 
   return (
     <PanelSection>
@@ -36,5 +35,5 @@ export function SummarySection({ onLaunchChallenge }: SummarySectionProps) {
         />
       </div>
     </PanelSection>
-  )
+  );
 }

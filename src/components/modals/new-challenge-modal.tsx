@@ -1,22 +1,25 @@
-import { Dialog, DialogContent, DialogHeader, DialogOverlay, DialogTitle } from "../ui/dialog"
-import { StarcraftButton } from "../ui/starcraft-button"
-import { useModal } from "@/stores/use-modal-store"
-import { useGameStore } from "@/stores/use-game-store"
-import { Challenge } from "@/models/challenge"
-import { SketchCanvas } from "./sketch-canvas"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+} from "../ui/dialog";
+import { StarcraftButton } from "../ui/starcraft-button";
+import { useModal } from "@/stores/use-modal-store";
+import { SketchCanvas } from "./sketch-canvas";
+import { useChallenge } from "@/stores/use-challenge-store";
 
 export function NewChallengeModal() {
-  const { type, isOpen, onClose } = useModal()
-  const selectedChallenge = useGameStore(state => state.selectedChallenge)
-  const challenges = useGameStore(state => state.challenges)
+  const { type, isOpen, onClose } = useModal();
+  const challenge = useChallenge((state) => state.challenge);
 
-  const isModalOpen = isOpen && type === "newChallenge"
-  const challenge = challenges.find((c: Challenge) => c.id === selectedChallenge)
+  const isModalOpen = isOpen && type === "newChallenge";
 
-  if (!challenge) return null
+  if (!challenge) return null;
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={onClose}>
+    <Dialog open={isModalOpen}>
       <DialogOverlay className="bg-black/50 backdrop-blur-sm" />
       <DialogContent className="bg-black/90 border-2 border-cyan-500/20 p-4 w-[800px] sm:max-w-[900px] backdrop-blur-md z-[100] select-none">
         <DialogHeader className="border-b-2 border-cyan-500/20 pb-2">
@@ -53,17 +56,9 @@ export function NewChallengeModal() {
           <div className="flex justify-end gap-2">
             <StarcraftButton
               size="sm"
-              variant="secondary"
-              onClick={onClose}
-            >
-              CANCEL
-            </StarcraftButton>
-            <StarcraftButton
-              size="sm"
               variant="primary"
               onClick={() => {
-                // TODO: Handle drawing submission
-                onClose()
+                onClose();
               }}
             >
               SUBMIT
@@ -72,5 +67,5 @@ export function NewChallengeModal() {
         </div>
       </DialogContent>
     </Dialog>
-  )
-} 
+  );
+}

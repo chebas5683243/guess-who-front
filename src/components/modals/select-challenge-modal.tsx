@@ -1,21 +1,26 @@
-import { Dialog, DialogContent, DialogHeader, DialogOverlay, DialogTitle } from "../ui/dialog"
-import { StarcraftButton } from "../ui/starcraft-button"
-import { useModal } from "@/stores/use-modal-store"
-import { generateChallenges } from "@/models/challenge"
-import { useGameStore } from "@/stores/use-game-store"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+} from "../ui/dialog";
+import { StarcraftButton } from "../ui/starcraft-button";
+import { useModal } from "@/stores/use-modal-store";
+import { generateChallenges } from "@/models/challenge";
+import { useChallenge } from "@/stores/use-challenge-store";
 
-const challenges = generateChallenges()
+const challenges = generateChallenges();
 
 export function SelectChallengeModal() {
-  const { type, isOpen, onClose } = useModal()
-  const updateChallenge = useGameStore(state => state.updateChallenge)
-  const maxPlayersPerChallenge = useGameStore(state => state.maxPlayersPerChallenge)
+  const { type, isOpen, onClose } = useModal();
+  const selectChallenge = useChallenge((state) => state.selectChallenge);
 
   const isModalOpen = isOpen && type === "selectChallenge";
 
   function onSelectChallenge(challengeId: string) {
-    updateChallenge(challengeId)
-    onClose()
+    selectChallenge(challengeId);
+    onClose();
   }
 
   return (
@@ -49,7 +54,7 @@ export function SelectChallengeModal() {
               </div>
               <div className="flex items-center justify-between mt-2">
                 <span className="text-xs font-starcraft tracking-wider text-cyan-500/60">
-                  REQUIRED PLAYERS: {maxPlayersPerChallenge}
+                  REQUIRED PLAYERS: {challenge.nPlayers}
                 </span>
                 <StarcraftButton
                   size="sm"
@@ -64,5 +69,5 @@ export function SelectChallengeModal() {
         </div>
       </DialogContent>
     </Dialog>
-  )
-} 
+  );
+}

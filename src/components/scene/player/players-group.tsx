@@ -1,24 +1,25 @@
-import { useGameStore } from "@/stores/use-game-store"
-import { Suspense } from "react"
-import { useModal } from "@/stores/use-modal-store"
-import { Player } from "./player"
+import { Suspense } from "react";
+import { useModal } from "@/stores/use-modal-store";
+import { Player } from "./player";
+import { usePlayers } from "@/stores/use-players-store";
+import { useChallenge } from "@/stores/use-challenge-store";
 
 export function PlayersGroup() {
-  const players = useGameStore((state) => state.players)
-  const selectedPlayers = useGameStore(state => state.selectedPlayers)
-  const anyModalOpen = useModal((state) => state.isOpen)
+  const players = usePlayers((state) => state.players);
+  const participantsId = useChallenge((state) => state.participantsId);
+  const anyModalOpen = useModal((state) => state.isOpen);
 
   return (
     <>
-      {players.map(player => {
-        const isSelected = selectedPlayers.some(sp => sp === player.id)
+      {players.map((player) => {
+        const isSelected = participantsId.some((sp) => sp === player.id);
 
         return (
           <Suspense key={player.id} fallback={null}>
             <Player
               id={player.id}
               order={player.order}
-              isDead={player.isDead}
+              isAlive={player.isAlive}
               username={player.username}
               nPlayers={players.length}
               isCaptain={player.isCaptain}
@@ -27,8 +28,8 @@ export function PlayersGroup() {
               color={player.color}
             />
           </Suspense>
-        )
+        );
       })}
     </>
-  )
+  );
 }

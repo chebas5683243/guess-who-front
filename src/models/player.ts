@@ -6,21 +6,23 @@ export interface Player {
   id: string;
   username: string;
   isCaptain: boolean;
-  isDead: boolean;
+  isAlive: boolean;
   order: number;
   color: PlayerColor;
+  isImpostor: boolean;
 }
 
 export function generateRandomPlayer(attr: Partial<Player>): Player {
-  const isDead = generateRandomBoolean();
+  const isAlive = generateRandomBoolean();
 
   return {
     id: uuid(),
-    isDead: isDead,
+    isAlive,
     username: generateRandomUsername(),
     order: attr.order ?? 1,
     isCaptain: false,
     color: attr.color ?? PLAYER_COLORS[0],
+    isImpostor: false,
   };
 }
 
@@ -31,7 +33,7 @@ export function generateRandomPlayers(length: number = 10) {
       generateRandomPlayer({ order: index + 1, color: PLAYER_COLORS[index] })
     );
 
-  const alivePlayers = players.filter((p) => !p.isDead);
+  const alivePlayers = players.filter((p) => p.isAlive);
   alivePlayers[0].isCaptain = true;
   console.log(players);
 

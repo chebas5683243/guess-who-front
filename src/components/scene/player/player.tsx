@@ -1,12 +1,12 @@
 import React, { memo, useMemo, useState } from 'react'
 import { ROOM_DIMENSIONS } from '@/constants/room'
 import { AstronautModel } from './astronaut'
-import { useGameStore } from '@/stores/use-game-store';
+import { useChallenge } from '@/stores/use-challenge-store';
 
 interface PlayerProps {
   id: string,
   order: number,
-  isDead: boolean,
+  isAlive: boolean,
   isCaptain: boolean,
   username: string,
   nPlayers: number,
@@ -17,9 +17,9 @@ interface PlayerProps {
 
 const GAP_BETWEEN_PLAYERS = 0.6
 
-function PlayerComponent({ id, order, isDead, isCaptain, username, nPlayers, hideTags, isSelected, color }: PlayerProps) {
+function PlayerComponent({ id, order, isAlive, isCaptain, username, nPlayers, hideTags, isSelected, color }: PlayerProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const selectPlayer = useGameStore(state => state.selectPlayer)
+  const selectParticipant = useChallenge(state => state.selectParticipant)
 
   const { showGlow, glowColor } = useMemo(() => ({
     showGlow: isHovered || isSelected,
@@ -31,17 +31,17 @@ function PlayerComponent({ id, order, isDead, isCaptain, username, nPlayers, hid
   ), [order, nPlayers])
 
   const xRotation = useMemo(() => (
-    isDead ? -Math.PI : -Math.PI / 2
-  ), [isDead])
+    isAlive ? -Math.PI /2 : -Math.PI
+  ), [isAlive])
 
   function onSelectPlayer() {
-    if (isDead) return;
-    selectPlayer(id)
+    if (!isAlive) return;
+    selectParticipant(id)
   }
 
   return (
     <AstronautModel
-      animate={!isDead}
+      animate={isAlive}
       onClick={onSelectPlayer}
       onPointerOver={() => setIsHovered(true)}
       onPointerOut={() => setIsHovered(false)}
@@ -56,8 +56,8 @@ function PlayerComponent({ id, order, isDead, isCaptain, username, nPlayers, hid
             <h3 className="text-sm text-white [text-shadow:_0_0_2px_black,0_0_2px_black,0_0_2px_black,0_0_2px_black] whitespace-nowrap">
               {username}
             </h3>
-            <div className={`text-xs px-1 rounded ${isDead ? 'bg-red-500' : 'bg-green-500'} text-white whitespace-nowrap`}>
-              {isDead ? 'DEAD' : 'ALIVE'}
+            <div className={`text-xs px-1 rounded ${isAlive ? 'bg-green-500' : 'bg-red-500'} text-white whitespace-nowrap`}>
+              {isAlive ? 'ALIVE': 'DEAD'}
             </div>
           </div>
         </AstronautModel.Html>
@@ -75,7 +75,7 @@ function PlayerComponent({ id, order, isDead, isCaptain, username, nPlayers, hid
       )}
 
       {/* Hover effects */}
-      <AstronautModel.Glow active={showGlow && !isDead} color={glowColor} />
+      <AstronautModel.Glow active={showGlow && isAlive} color={glowColor} />
     </AstronautModel>
   )
 }

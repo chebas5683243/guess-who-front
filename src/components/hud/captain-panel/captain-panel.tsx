@@ -1,23 +1,52 @@
-import { ChallengeSection } from "./challenge-section"
-import { PlayersSection } from "./players-section"
-import { SummarySection } from "./summary-section"
-import { useGameStore } from "@/stores/use-game-store"
-import { useState } from "react"
+import { useModal } from "@/stores/use-modal-store";
+import { ChallengeSection } from "./challenge-section";
+import { PlayersSection } from "./players-section";
+import { SummarySection } from "./summary-section";
+import { useState, useEffect } from "react";
+import { useChallenge } from "@/stores/use-challenge-store";
+import { cn } from "@/lib/utils";
 
 export function ControlPanel() {
-  const [isClosing, setIsClosing] = useState(false)
-  const startChallenge = useGameStore(state => state.startChallenge)
+  const [isClosing, setIsClosing] = useState(false);
+  const startChallenge = useChallenge((state) => state.startChallenge);
+  const onOpenModal = useModal((state) => state.onOpen);
+  const isChallengeInProgress = useModal(
+    (state) => state.type == "newChallenge"
+  );
+
+  useEffect(() => {
+    if (!isChallengeInProgress) {
+      setIsClosing(false);
+    }
+  }, [isChallengeInProgress]);
 
   const handleLaunchChallenge = () => {
-    setIsClosing(true)
+    setIsClosing(true);
     setTimeout(() => {
-      startChallenge()
-    }, 500) // Match this with the animation duration
-  }
+      startChallenge();
+      onOpenModal({
+        modalType: "newChallenge",
+      });
+    }, 500);
+  };
 
   return (
-    <div className={`absolute w-full bottom-0 left-0 p-4 select-none transition-all duration-500 ${isClosing ? 'opacity-0 pointer-events-none' : ''}`}>
-      <div className={`relative flex flex-col gap-4 p-4 rounded-lg backdrop-blur-sm bg-black/80 border-2 border-cyan-500/20 z-20 ${isClosing ? 'animate-panel-close' : ''}`}>
+    <div
+      className={cn(
+        "absolute w-full bottom-0 left-0 p-4 select-none transition-all duration-500",
+        {
+          "opacity-0 pointer-events-none": isClosing,
+        }
+      )}
+    >
+      <div
+        className={cn(
+          "relative flex flex-col gap-4 p-4 rounded-lg backdrop-blur-sm bg-black/80 border-2 border-cyan-500/20 z-20",
+          {
+            "animate-panel-close": isClosing,
+          }
+        )}
+      >
         {/* Scanline effect */}
         {isClosing && (
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/20 to-transparent animate-scanline" />
@@ -41,5 +70,5 @@ export function ControlPanel() {
         </div>
       </div>
     </div>
-  )
+  );
 }

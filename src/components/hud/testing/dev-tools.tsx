@@ -1,13 +1,13 @@
-import { useGameStore } from "@/stores/use-game-store"
+import { useGame } from "@/stores/use-game-store"
 
 interface DevToolsHUDProps {
   onResetCamera: () => void;
 }
 
 export function DevToolsHUD({ onResetCamera: resetCamera }: DevToolsHUDProps) {
-  const goToNextDay = useGameStore(state => state.goToNextDay)
-  const goToPreviousDay = useGameStore(state => state.goToPreviousDay)
-  const resetCurrentDay = useGameStore(state => state.goToFirstDay)
+  const goToNextDay = useGame(state => state.goToNextDay)
+  const goToPreviousDay = useGame(state => state.goToPreviousDay)
+  const resetCurrentDay = useGame(state => state.goToFirstDay)
 
   return (
     <div className="absolute top-4 right-4 flex gap-2 z-20">
