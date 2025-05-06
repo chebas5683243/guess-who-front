@@ -1,11 +1,17 @@
 import { memo } from "react";
-import { SpaceshipWall } from "./wall";
-import { PlayersGroup } from "../player/players-group";
 import { ROOM_DIMENSIONS } from "@/constants/room";
+import { SpaceshipWall } from "@/components/meshes/wall";
+import { PlayersGroup } from "../player/players-group";
 
 function LobbyComponent() {
   return (
-    <group position={[0, ROOM_DIMENSIONS.HEIGHT / 2 - ROOM_DIMENSIONS.Y_DELTA_FROM_CAMERA, 0]}>
+    <group
+      position={[
+        0,
+        ROOM_DIMENSIONS.HEIGHT / 2 - ROOM_DIMENSIONS.Y_DELTA_FROM_CAMERA,
+        0,
+      ]}
+    >
       {/* Left Wall */}
       <SpaceshipWall
         color="white"
@@ -37,7 +43,7 @@ function LobbyComponent() {
 
       <PlayersGroup />
     </group>
-  )
+  );
 }
 
-export const Lobby = memo(LobbyComponent)
+export const Lobby = memo(LobbyComponent);

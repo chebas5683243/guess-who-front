@@ -1,11 +1,11 @@
-import React, { PropsWithChildren, useEffect, useMemo, useRef } from 'react'
-import { useGLTF, useAnimations, Html } from '@react-three/drei'
-import { SkeletonUtils } from 'three/examples/jsm/Addons.js'
-import { useGraph } from '@react-three/fiber'
-import * as THREE from "three"
-import { TallGlow } from '../../effects/glow'
+import React, { PropsWithChildren, useEffect, useMemo, useRef } from "react";
+import { useGLTF, useAnimations, Html } from "@react-three/drei";
+import { SkeletonUtils } from "three/examples/jsm/Addons.js";
+import { useGraph } from "@react-three/fiber";
+import * as THREE from "three";
+import { TallGlow } from "./glow";
 
-const gltfPath = "/models/little_astronaut/scene.gltf"
+const gltfPath = "/models/little_astronaut/scene.gltf";
 
 type AstronautModelProps = PropsWithChildren<{
   position: [number, number, number];
@@ -15,7 +15,7 @@ type AstronautModelProps = PropsWithChildren<{
   onPointerOver: () => void;
   onPointerOut: () => void;
   color?: string;
-}>
+}>;
 
 function Astronaut({
   position,
@@ -25,38 +25,45 @@ function Astronaut({
   children,
   onPointerOver,
   onPointerOut,
-  color = "#ffffff" // Default white color
+  color = "#ffffff", // Default white color
 }: AstronautModelProps) {
-  const group = useRef(null)
-  const { scene, materials, animations } = useGLTF(gltfPath)
-  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene])
-  const { nodes } = useGraph(clone)
-  const { mixer } = useAnimations(clone.animations, group)
+  const group = useRef(null);
+  const { scene, materials, animations } = useGLTF(gltfPath);
+  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes } = useGraph(clone);
+  const { mixer } = useAnimations(clone.animations, group);
 
   // Create a unique material for this instance
   const material = useMemo(() => {
-    const originalMaterial = materials.Astronaut as THREE.MeshStandardMaterial
-    const newMaterial = originalMaterial.clone()
-    newMaterial.color.set(color)
-    return newMaterial
-  }, [materials.Astronaut, color])
+    const originalMaterial = materials.Astronaut as THREE.MeshStandardMaterial;
+    const newMaterial = originalMaterial.clone();
+    newMaterial.color.set(color);
+    return newMaterial;
+  }, [materials.Astronaut, color]);
 
   useEffect(() => {
     if (animations.length === 0 || !animate) return;
-    const fullClip = animations[0]
+    const fullClip = animations[0];
     // const falling = THREE.AnimationUtils.subclip(fullClip, 'Falling', 0, 30)
-    const standing = THREE.AnimationUtils.subclip(fullClip, 'Standing', 31, 150)
+    const standing = THREE.AnimationUtils.subclip(
+      fullClip,
+      "Standing",
+      31,
+      150
+    );
     // const running = THREE.AnimationUtils.subclip(fullClip, 'Running', 151, 180)
     // const carrying = THREE.AnimationUtils.subclip(fullClip, 'Carrying', 181, 210)
     // const jumping = THREE.AnimationUtils.subclip(fullClip, 'Jumping', 211, 250)
     // const idle = THREE.AnimationUtils.subclip(fullClip, 'Idle', 251, 400)
-    const standingAction = mixer.clipAction(standing)
-    const random = Math.random() * 0.5 + 0.5
-    standingAction.setEffectiveTimeScale(random)
-    standingAction.play()
+    const standingAction = mixer.clipAction(standing);
+    const random = Math.random() * 0.5 + 0.5;
+    standingAction.setEffectiveTimeScale(random);
+    standingAction.play();
 
-    return () => { standingAction.reset() }
-  }, [animations, mixer, animate])
+    return () => {
+      standingAction.reset();
+    };
+  }, [animations, mixer, animate]);
 
   function handleClick(e: Event) {
     e.stopPropagation();
@@ -84,8 +91,15 @@ function Astronaut({
       onPointerOut={handlePointerOut}
     >
       <group name="Sketchfab_Scene">
-        <group name="Sketchfab_model" rotation={[xRotation, 0, 0]} scale={0.011}>
-          <group name="17f9d1b3a83741e2a2981db7241c686efbx" rotation={[Math.PI / 2, 0, 0]}>
+        <group
+          name="Sketchfab_model"
+          rotation={[xRotation, 0, 0]}
+          scale={0.011}
+        >
+          <group
+            name="17f9d1b3a83741e2a2981db7241c686efbx"
+            rotation={[Math.PI / 2, 0, 0]}
+          >
             <group name="Object_2">
               <group name="RootNode">
                 <group
@@ -94,7 +108,11 @@ function Astronaut({
                   rotation={[-Math.PI / 2, 0, 0]}
                   scale={100}
                 />
-                <group name="Armature" rotation={[-Math.PI / 2, 0, 0]} scale={100}>
+                <group
+                  name="Armature"
+                  rotation={[-Math.PI / 2, 0, 0]}
+                  scale={100}
+                >
                   <group name="Object_6">
                     <primitive object={nodes._rootJoint} />
                     <skinnedMesh
@@ -120,39 +138,43 @@ function Astronaut({
       </group>
       {children}
     </group>
-  )
+  );
 }
 
 type AstronautGlowProps = {
-  color: string
-  active: boolean
-}
+  color: string;
+  active: boolean;
+};
 function AstronautGlow({ active, color }: AstronautGlowProps) {
   if (!active) return null;
-  return (
-    <TallGlow color={color} height={1.25} width={0.5} intensity={0.5} />
-  )
+  return <TallGlow color={color} height={1.25} width={0.5} intensity={0.5} />;
 }
 
 type AstronautHTMLContentProps = PropsWithChildren<{
   position: "top" | "bottom";
-}>
-function AstronautHTMLContent({ position, children }: AstronautHTMLContentProps) {
+}>;
+function AstronautHTMLContent({
+  position,
+  children,
+}: AstronautHTMLContentProps) {
   const positionVector: [number, number, number] = useMemo(() => {
-    if (position === "bottom") return [0, -0.1, 0]
-    if (position === "top") return [0, 1.8, 0]
-    return [0, 0, 0]
-  }, [position])
+    if (position === "bottom") return [0, -0.1, 0];
+    if (position === "top") return [0, 1.8, 0];
+    return [0, 0, 0];
+  }, [position]);
 
   return (
-    <Html position={positionVector} className="pointer-events-none select-none w-full text-center">
+    <Html
+      position={positionVector}
+      className="pointer-events-none select-none w-full text-center"
+    >
       {children}
     </Html>
-  )
+  );
 }
 
-Astronaut.Html = AstronautHTMLContent
-Astronaut.Glow = AstronautGlow
-export { Astronaut as AstronautModel }
+Astronaut.Html = AstronautHTMLContent;
+Astronaut.Glow = AstronautGlow;
+export { Astronaut as AstronautModel };
 
-useGLTF.preload(gltfPath)
+useGLTF.preload(gltfPath);
