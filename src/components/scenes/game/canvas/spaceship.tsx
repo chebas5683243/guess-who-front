@@ -1,9 +1,9 @@
 import { memo } from "react";
 import { ROOM_DIMENSIONS } from "@/constants/room";
-import { SpaceshipWall } from "@/components/meshes/wall";
-import { PlayersGroup } from "../player/players-group";
+import { Wall } from "@/components/meshes/wall";
+import { PlayersGroup } from "./player/players-group";
 
-function LobbyComponent() {
+function SpaceshipComponent() {
   return (
     <group
       position={[
@@ -13,28 +13,28 @@ function LobbyComponent() {
       ]}
     >
       {/* Left Wall */}
-      <SpaceshipWall
+      <Wall
         color="white"
         position={[ROOM_DIMENSIONS.WIDTH / 2, 0, 0]}
         rotation={[0, Math.PI / 2, 0]}
         size={[ROOM_DIMENSIONS.DEPTH, ROOM_DIMENSIONS.HEIGHT]}
       />
       {/* Rigth Wall */}
-      <SpaceshipWall
+      <Wall
         color="white"
         position={[-ROOM_DIMENSIONS.WIDTH / 2, 0, 0]}
         rotation={[0, Math.PI / 2, 0]}
         size={[ROOM_DIMENSIONS.DEPTH, ROOM_DIMENSIONS.HEIGHT]}
       />
       {/* Bottom Wall */}
-      <SpaceshipWall
+      <Wall
         color="gray"
         position={[0, ROOM_DIMENSIONS.HEIGHT / 2, 0]}
         rotation={[Math.PI / 2, 0, 0]}
         size={[ROOM_DIMENSIONS.WIDTH, ROOM_DIMENSIONS.DEPTH]}
       />
       {/* Top Wall */}
-      <SpaceshipWall
+      <Wall
         color="gray"
         position={[0, -ROOM_DIMENSIONS.HEIGHT / 2, 0]}
         rotation={[Math.PI / 2, 0, 0]}
@@ -46,4 +46,4 @@ function LobbyComponent() {
   );
 }
 
-export const Lobby = memo(LobbyComponent);
+export const Spaceship = memo(SpaceshipComponent);

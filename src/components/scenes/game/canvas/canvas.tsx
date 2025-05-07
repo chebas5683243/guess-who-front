@@ -1,14 +1,10 @@
 import { OrbitControls, Stars } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { RefObject, Suspense } from "react";
-import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
-import { Lobby } from "./spaceship/lobby";
-import { Zerus } from "./spaceship/zerus";
-interface SceneProps {
-  cameraRef: RefObject<OrbitControlsImpl | null>;
-}
+import { Suspense } from "react";
+import { Spaceship } from "./spaceship";
+import { Zerus } from "./zerus";
 
-export function Scene({ cameraRef }: SceneProps) {
+export function GameCanvas() {
   return (
     <div className="w-screen h-screen">
       <Canvas camera={{ position: [0, 0, 1.5], fov: 75 }}>
@@ -20,23 +16,20 @@ export function Scene({ cameraRef }: SceneProps) {
           distance={50}
           color="#ff0000"
         />
-        <OrbitControls
-          ref={cameraRef}
-          enableRotate={true}
-          enableZoom={true}
-          minDistance={0.001}
-        />
+        <OrbitControls minDistance={0.001} />
 
         <Stars
           radius={100}
           depth={50}
-          count={5000}
+          count={10000}
           factor={4}
           saturation={1}
           fade
           speed={1}
         />
-        <Lobby />
+
+        <Spaceship />
+
         <Suspense fallback={null}>
           <Zerus />
         </Suspense>
