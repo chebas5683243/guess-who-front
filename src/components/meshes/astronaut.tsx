@@ -9,18 +9,18 @@ const gltfPath = "/models/little_astronaut/scene.gltf";
 
 type AstronautModelProps = PropsWithChildren<{
   position: [number, number, number];
-  xRotation: number;
-  animate: boolean;
-  onClick: () => void;
-  onPointerOver: () => void;
-  onPointerOut: () => void;
+  rotation: [number, number, number];
+  animate?: boolean;
+  onClick?: () => void;
+  onPointerOver?: () => void;
+  onPointerOut?: () => void;
   color?: string;
 }>;
 
 function Astronaut({
   position,
-  xRotation,
-  animate,
+  rotation = [0, 0, 0],
+  animate = false,
   onClick,
   children,
   onPointerOver,
@@ -67,17 +67,17 @@ function Astronaut({
 
   function handleClick(e: Event) {
     e.stopPropagation();
-    onClick();
+    onClick?.();
   }
 
   function handlePointerOver(e: Event) {
     e.stopPropagation();
-    onPointerOver();
+    onPointerOver?.();
   }
 
   function handlePointerOut(e: Event) {
     e.stopPropagation();
-    onPointerOut();
+    onPointerOut?.();
   }
 
   return (
@@ -91,11 +91,7 @@ function Astronaut({
       onPointerOut={handlePointerOut}
     >
       <group name="Sketchfab_Scene">
-        <group
-          name="Sketchfab_model"
-          rotation={[xRotation, 0, 0]}
-          scale={0.011}
-        >
+        <group name="Sketchfab_model" rotation={rotation} scale={0.011}>
           <group
             name="17f9d1b3a83741e2a2981db7241c686efbx"
             rotation={[Math.PI / 2, 0, 0]}

@@ -1,13 +1,23 @@
 import { StarcraftButton } from "@/components/ui/starcraft-button";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function MainMenu() {
   const [gameCode, setGameCode] = useState("");
+  const router = useRouter();
+
+  function onCreateGame() {
+    router.push("/r/test");
+  }
+
+  function onJoinGame() {
+    router.push(`/r/${gameCode}`);
+  }
 
   return (
     <div className="absolute inset-0 flex items-center justify-center z-20">
       {/* StarCraft-style container */}
-      <div className="relative w-[600px] p-8 backdrop-blur-[0.3px] bg-black/30 border-2 border-cyan-500/20">
+      <div className="relative w-[600px] p-8 backdrop-blur-[0.4px] bg-black/30 border-2 border-cyan-500/20">
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center">
           {/* Title */}
@@ -24,7 +34,11 @@ export function MainMenu() {
 
           {/* Menu Options */}
           <div className="flex flex-col gap-6 w-full max-w-xs">
-            <StarcraftButton size="lg" className="w-full">
+            <StarcraftButton
+              size="lg"
+              className="w-full"
+              onClick={onCreateGame}
+            >
               CREATE GAME
             </StarcraftButton>
 
@@ -53,6 +67,7 @@ export function MainMenu() {
                 variant="secondary"
                 className="w-full"
                 disabled={!gameCode.trim()}
+                onClick={onJoinGame}
               >
                 JOIN GAME
               </StarcraftButton>

@@ -15,6 +15,8 @@ interface GameActions {
   goToFirstDay: () => void;
   goToNextDay: () => void;
   goToPreviousDay: () => void;
+
+  startGame: () => void;
 }
 
 export const useGame = create<GameState & GameActions>()(
@@ -42,6 +44,12 @@ export const useGame = create<GameState & GameActions>()(
       set((state) => {
         if (state.currentDay === 1) return;
         state.currentDay -= 1;
+      });
+    },
+
+    startGame: () => {
+      set((state) => {
+        state.status = "gameplay";
       });
     },
   }))

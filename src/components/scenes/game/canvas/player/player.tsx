@@ -67,7 +67,7 @@ function PlayerComponent({
       onPointerOver={() => setIsHovered(true)}
       onPointerOut={() => setIsHovered(false)}
       position={position}
-      xRotation={xRotation}
+      rotation={[xRotation, 0, 0]}
       color={color}
     >
       {/* Player name and status */}
