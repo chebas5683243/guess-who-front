@@ -3,10 +3,23 @@ import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { Spaceship } from "./spaceship";
 import { Zerus } from "./zerus";
+import { useCanvasLoad } from "@/hooks/use-canvas-load";
+import { FirstRenderHandler } from "@/components/common/first-render-handler";
+import { cn } from "@/lib/utils";
 
 export function GameCanvas() {
+  const { isCanvasReady, hideOverlay, onCanvasLoad } = useCanvasLoad();
+
   return (
     <div className="w-screen h-screen">
+      {!hideOverlay && (
+        <div
+          className={cn(
+            "w-screen h-screen bg-[#040404] z-1000 absolute top-0 left-0 transition-opacity duration-1000",
+            isCanvasReady ? "opacity-0 pointer-events-none" : "opacity-100"
+          )}
+        />
+      )}
       <Canvas camera={{ position: [0, 0, 1.5], fov: 75 }}>
         <color attach="background" args={["#040404"]} />
         <ambientLight intensity={0.4} />
@@ -28,9 +41,9 @@ export function GameCanvas() {
           speed={1}
         />
 
-        <Spaceship />
-
         <Suspense fallback={null}>
+          <FirstRenderHandler onLoad={onCanvasLoad} />
+          <Spaceship />
           <Zerus />
         </Suspense>
       </Canvas>

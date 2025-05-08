@@ -2,18 +2,14 @@ import { Stars } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { PlanetModel } from "@/components/meshes/planet";
 import { AstronautModel } from "@/components/meshes/astronaut";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import { cn } from "@/lib/utils";
 import { CameraMotion } from "./camera-motion";
+import { useCanvasLoad } from "@/hooks/use-canvas-load";
+import { FirstRenderHandler } from "@/components/common/first-render-handler";
 
 export function LobbyCanvas() {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [hideOverlay, setHideOverlay] = useState(false);
-
-  function onCanvasLoad() {
-    setIsLoaded(true);
-    setTimeout(() => setHideOverlay(true), 1000);
-  }
+  const { isCanvasReady, hideOverlay, onCanvasLoad } = useCanvasLoad();
 
   return (
     <div className="w-screen h-screen">
@@ -21,7 +17,7 @@ export function LobbyCanvas() {
         <div
           className={cn(
             "w-screen h-screen bg-[#040404] z-1000 absolute top-0 left-0 transition-opacity duration-1000",
-            isLoaded ? "opacity-0 pointer-events-none" : "opacity-100"
+            isCanvasReady ? "opacity-0 pointer-events-none" : "opacity-100"
           )}
         />
       )}
@@ -48,7 +44,7 @@ export function LobbyCanvas() {
         />
 
         <Suspense fallback={null}>
-          <FirstLoadHandler onLoad={onCanvasLoad} />
+          <FirstRenderHandler onLoad={onCanvasLoad} />
           <PlanetModel
             position={[0, 0, -20]}
             color={PlanetModel.COLOR_RED}
@@ -67,16 +63,4 @@ export function LobbyCanvas() {
       </Canvas>
     </div>
   );
-}
-
-type FirstLoadHandlerProp = {
-  onLoad: () => void;
-};
-function FirstLoadHandler({ onLoad }: FirstLoadHandlerProp) {
-  console.log(new Date().valueOf());
-  useEffect(() => {
-    console.log(new Date().valueOf());
-    onLoad();
-  }, [onLoad]);
-  return null;
 }

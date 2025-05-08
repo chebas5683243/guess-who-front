@@ -4,7 +4,6 @@ export function PlayersPanel() {
   const players = usePlayers((state) => state.players);
   const removePlayer = usePlayers((state) => state.removePlayer);
 
-  // Calculate empty slots to add
   const MAX_SLOTS = 10;
   const emptySlots = Math.max(0, MAX_SLOTS - players.length);
 
@@ -17,7 +16,6 @@ export function PlayersPanel() {
         <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent mb-4" />
 
         <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2">
-          {/* Existing players */}
           {players.map((player) => (
             <div key={player.id} className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -38,7 +36,6 @@ export function PlayersPanel() {
             </div>
           ))}
 
-          {/* Empty slots */}
           {Array.from({ length: emptySlots }).map((_, index) => (
             <div
               key={`empty-${index}`}
