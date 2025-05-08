@@ -1,5 +1,5 @@
 import { PLAYER_COLORS, PlayerColor } from "@/constants/player-colors";
-import { generateRandomBoolean, generateRandomUsername } from "@/utils/random";
+import { generateRandomUsername } from "@/utils/random";
 import { uuid } from "@/utils/uuid";
 
 export interface Player {
@@ -13,11 +13,9 @@ export interface Player {
 }
 
 export function generateRandomPlayer(attr: Partial<Player>): Player {
-  const isAlive = generateRandomBoolean();
-
   return {
     id: uuid(),
-    isAlive,
+    isAlive: true,
     username: generateRandomUsername(),
     order: attr.order ?? 1,
     isCaptain: false,
@@ -32,10 +30,6 @@ export function generateRandomPlayers(length: number = 10) {
     .map((_, index) =>
       generateRandomPlayer({ order: index + 1, color: PLAYER_COLORS[index] })
     );
-
-  const alivePlayers = players.filter((p) => p.isAlive);
-  alivePlayers[0].isCaptain = true;
-  console.log(players);
 
   return players;
 }

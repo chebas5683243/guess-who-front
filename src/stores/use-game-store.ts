@@ -8,6 +8,9 @@ interface GameState {
   status: "lobby" | "gameplay" | "over";
   dayStage: "challenge" | "vote";
   challenges: Challenge[];
+  discussionTime: number;
+  proposalTime: number;
+  votingTime: number;
 }
 
 interface GameActions {
@@ -17,6 +20,10 @@ interface GameActions {
   goToPreviousDay: () => void;
 
   startGame: () => void;
+  endGame: () => void;
+  setDiscussionTime: (time: number) => void;
+  setProposalTime: (time: number) => void;
+  setVotingTime: (time: number) => void;
 }
 
 export const useGame = create<GameState & GameActions>()(
@@ -26,6 +33,9 @@ export const useGame = create<GameState & GameActions>()(
     challenges: generateChallenges(),
     status: "lobby",
     dayStage: "challenge",
+    discussionTime: 40,
+    proposalTime: 40,
+    votingTime: 40,
 
     goToFirstDay: () => {
       set((state) => {
@@ -50,6 +60,30 @@ export const useGame = create<GameState & GameActions>()(
     startGame: () => {
       set((state) => {
         state.status = "gameplay";
+      });
+    },
+
+    endGame: () => {
+      set((state) => {
+        state.status = "over";
+      });
+    },
+
+    setDiscussionTime: (time: number) => {
+      set((state) => {
+        state.discussionTime = time;
+      });
+    },
+
+    setProposalTime: (time: number) => {
+      set((state) => {
+        state.proposalTime = time;
+      });
+    },
+
+    setVotingTime: (time: number) => {
+      set((state) => {
+        state.votingTime = time;
       });
     },
   }))

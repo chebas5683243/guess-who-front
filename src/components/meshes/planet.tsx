@@ -96,7 +96,7 @@ function Planet({
               ref={materialRef}
               color={COLOR_DARK_RED}
               transparent
-              opacity={0.15}
+              opacity={0.1}
               emissive={COLOR_DARK_RED}
               emissiveIntensity={1}
             />

@@ -7,18 +7,16 @@ export function MainMenu() {
   const router = useRouter();
 
   function onCreateGame() {
-    router.push("/r/test");
+    router.push("/r/750128");
   }
 
   function onJoinGame() {
-    router.push(`/r/${gameCode}`);
+    router.push("/r/750128");
   }
 
   return (
     <div className="absolute inset-0 flex items-center justify-center z-20">
-      {/* StarCraft-style container */}
       <div className="relative w-[600px] p-8 backdrop-blur-[0.4px] bg-black/30 border-2 border-cyan-500/20">
-        {/* Content */}
         <div className="relative z-10 flex flex-col items-center">
           {/* Title */}
           <div className="mb-8 text-center">

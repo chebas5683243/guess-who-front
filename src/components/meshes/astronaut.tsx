@@ -11,21 +11,23 @@ type AstronautModelProps = PropsWithChildren<{
   position: [number, number, number];
   rotation: [number, number, number];
   animate?: boolean;
+  animationSpeed?: number;
+  color?: string;
   onClick?: () => void;
   onPointerOver?: () => void;
   onPointerOut?: () => void;
-  color?: string;
 }>;
 
 function Astronaut({
   position,
   rotation = [0, 0, 0],
   animate = false,
+  animationSpeed,
+  color = "#ffffff",
   onClick,
   children,
   onPointerOver,
   onPointerOut,
-  color = "#ffffff", // Default white color
 }: AstronautModelProps) {
   const group = useRef(null);
   const { scene, materials, animations } = useGLTF(gltfPath);
@@ -56,14 +58,14 @@ function Astronaut({
     // const jumping = THREE.AnimationUtils.subclip(fullClip, 'Jumping', 211, 250)
     // const idle = THREE.AnimationUtils.subclip(fullClip, 'Idle', 251, 400)
     const standingAction = mixer.clipAction(standing);
-    const random = Math.random() * 0.5 + 0.5;
-    standingAction.setEffectiveTimeScale(random);
+    const speed = animationSpeed ?? Math.random() * 0.5 + 0.5;
+    standingAction.setEffectiveTimeScale(speed);
     standingAction.play();
 
     return () => {
       standingAction.reset();
     };
-  }, [animations, mixer, animate]);
+  }, [animations, mixer, animate, animationSpeed]);
 
   function handleClick(e: Event) {
     e.stopPropagation();

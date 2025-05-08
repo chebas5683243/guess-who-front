@@ -4,10 +4,9 @@ import { PlanetModel } from "@/components/meshes/planet";
 import { AstronautModel } from "@/components/meshes/astronaut";
 import { Suspense, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useGame } from "@/stores/use-game-store";
+import { CameraMotion } from "./camera-motion";
 
 export function LobbyCanvas() {
-  const startGame = useGame((state) => state.startGame);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hideOverlay, setHideOverlay] = useState(false);
 
@@ -17,7 +16,7 @@ export function LobbyCanvas() {
   }
 
   return (
-    <div className="w-screen h-screen" onClick={startGame}>
+    <div className="w-screen h-screen">
       {!hideOverlay && (
         <div
           className={cn(
@@ -35,6 +34,8 @@ export function LobbyCanvas() {
           distance={50}
           color="#ff0000"
         />
+
+        <CameraMotion />
 
         <Stars
           radius={100}
@@ -55,6 +56,7 @@ export function LobbyCanvas() {
           />
           <AstronautModel
             animate
+            animationSpeed={0.25}
             // position={[-0.5, -0.5, -0.4]}
             // rotation={[-Math.PI / 2, 0, (Math.PI * 2.2) / 3]}
             position={[-0, -0.6, -0.5]}
